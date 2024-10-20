@@ -86,8 +86,9 @@ public record StaffOnlineCommand(@Nonnull ProxyServer proxyServer, @Nonnull Staf
      */
 
     private Pair<Component, Integer> getEntries() {
-        final Component component = Component.empty();
+        Component component = Component.empty();
         int staffCount = 0;
+        MiniMessage miniMessage = MiniMessage.miniMessage();
 
         for (RegisteredServer server : proxyServer.getAllServers()) {
             final String serverName = server.getServerInfo().getName();
@@ -95,15 +96,16 @@ public record StaffOnlineCommand(@Nonnull ProxyServer proxyServer, @Nonnull Staf
 
             if (!onlinePlayers.isEmpty()) {
                 staffCount += onlinePlayers.size();
-                MiniMessage miniMessage = MiniMessage.miniMessage();
-                component.append(miniMessage.deserialize(config.staff_online_entry.replace("{server_name}", serverName).replace("{entries}", String.join(", ", onlinePlayers))))
+                component = component.append(miniMessage.deserialize(config.staff_online_entry
+                                .replace("{server_name}", serverName)
+                                .replace("{entries}", String.join(", ", onlinePlayers))))
                         .append(Component.text("\n"));
-
             }
         }
 
         return new Pair<>(component, staffCount);
     }
+
 
     /**
      * Get prettified online players that match a predicate
@@ -117,7 +119,7 @@ public record StaffOnlineCommand(@Nonnull ProxyServer proxyServer, @Nonnull Staf
         final List<String> onlinePlayers = proxyServer
                 .getServer(server)
                 .map(s -> s.getPlayersConnected())
-                .map(p -> p.stream().filter(predicate).map(Player::getUsername).toList())
+                .map(p -> p.stream().filter(f -> predicate.test(f)).map(Player::getUsername).toList())
                 .orElse(List.of());
 
 
