@@ -1,0 +1,11 @@
+# Do not change this
+config-version = 1.0
+
+# /staffonline command settings
+staff-online-aliases = ["list", "staff"]
+
+# /staffonline command messages / formatting
+staff-online-header = "<yellow>Staff online on <bold>ExampleMC<reset><yellow>:"
+staff-online-entry = " <yellow>{server_name} - <white><bold>{entries}"
+staff-online-footer = "<yellow>There are currently <bold>{count}<reset><yellow> online staff members."
+staff-permission = "global.staff"
